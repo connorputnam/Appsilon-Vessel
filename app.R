@@ -8,14 +8,13 @@ library(semantic.dashboard)
 library(shinyWidgets)
 library(leaflet)
 #marine_data <- read.csv("ships.csv")
-#marine_data <- read.csv("Documents/R/Ship/ships.csv")
-#marine_data_sample <- marine_data[sample(nrow(marine_data), 2000),]
-#write.csv(marine_data_sample, "ship2.csv")
+#marine_data_big <- read.csv("ship.csv")
+#marine_data_sample <- marine_data_big[sample(nrow(marine_data_big), 1000000),]
+#write.csv(marine_data_sample, "ship_medium.csv")
 
-#marine_data <- read.csv(unz("shipSmall.zip", "shipSmall.csv"), header = TRUE,
- #                       sep = ",") 
+marine_data <- read.csv(unz("ship_large.zip", "ship_large.csv"), header = TRUE,                       sep = ",") 
 
-marine_data <- read.csv("ship_small.csv")
+#marine_data <- read.csv("ship_medium.csv")
 
 marine_data2 <- marine_data %>% 
     group_by(SHIP_ID) %>%
@@ -199,7 +198,14 @@ server <- function(input, output, session) {
             addCircleMarkers(data = points2(), 
                              radius = 2,
                              color = "green") %>%
-            addProviderTiles(providers$CartoDB.Positron)
+            addProviderTiles(providers$CartoDB.Positron) %>%
+            addLegend(position = "topright", 
+                      colors =c("green",  "blue"),
+                      labels= c("Starting Location", "Ending Location"),
+                      title= "Vessel Observation",
+                      opacity = 1) %>%
+            addMiniMap(tiles = providers$Esri.WorldStreetMap,
+                       toggleDisplay = TRUE) 
         #addLegend("bottomright", values = "hi", color = "green")
         m
     })
